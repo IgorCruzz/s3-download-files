@@ -21,24 +21,23 @@ s3.listObjectsV2({
 
   const file = data.Contents  
 
-  file.map(teste => {
+  file.map(({Key}) => {
 
     s3.getObject(
       {
         Bucket: process.env.BUCKET_NAME,
-        Key:  teste.Key,
+        Key,
       },
-      (err, data) => {
+      (err, { Body }) => {
         if (err) return console.log(err);
 
-        const filename = teste.Key.split('/')[1]
+        const filename = Key.split('/')[1]
 
-        fs.writeFile(filename, data.Body, (err, data) => {
-          if(err) return
-          console.log(data)
+        fs.writeFile(filename, Body, (err, _) => {
+          if(err) return           
         })
   
-        console.log(data.Body);
+         
       }
     );
   })
